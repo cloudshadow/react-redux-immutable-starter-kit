@@ -6,12 +6,10 @@ import { connect } from 'react-redux';
 import * as templateActions from '../actions/templateActions';
 import TemplateComponent from '../components/Template/TemplateComponent';
 
-export class TemplatePage extends React.Component {
-  render() {
-    return (
-      <TemplateComponent />
-    );
-  }
+export const TemplatePage = (props) => {
+  return (
+    <TemplateComponent />
+  );
 }
 
 TemplatePage.propTypes = {

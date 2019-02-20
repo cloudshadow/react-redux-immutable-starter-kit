@@ -5,10 +5,10 @@
   > Simple [React](http://facebook.github.io/react/index.html) [Redux](https://redux.js.org/) [Immutable.js](http://facebook.github.io/immutable-js/) Starter Kit for create application.
 
 ## What's new
-  > Updated to react v16.0 and react-router v4.0 
+  > Updated to react v16.8 and use hook api
 
 ## Libraries
-  * [React](https://reactjs.org/) v16.0+
+  * [React](https://reactjs.org/) v16.8+
   * [Immutable](http://facebook.github.io/immutable-js/) v4.0+
   * [React Router](https://reacttraining.com/react-router/) v4.0+
   * [Redux](https://redux.js.org/)
@@ -21,6 +21,7 @@
 1. git clone https://github.com/cloudshadow/react-redux-starter-kit.git
 2. npm install
 3. npm start:dev
+4. visit http://localhost:4000
 
 ## Useful Command
 1. npm run build (build production package)

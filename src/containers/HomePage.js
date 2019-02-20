@@ -5,34 +5,32 @@ import { bindActionCreators } from 'redux';
 import * as homeActions from '../actions/homeActions';
 import HomeComponent from '../components/Home/HomeComponent';
 
-export class HomePage extends React.Component {
-  render() {
-    return (
-      <HomeComponent
-        getTitle={this.props.homeActions.getTitle}
-        homeState={this.props.homeState}
-      />
-    );
-  }
-}
+const HomePage = (props) => {
+  return (
+    <HomeComponent
+      getTitle={props.homeActions.getTitle}
+      homeState={props.homeState}
+    />
+  );
+};
 
 HomePage.propTypes = {
   homeActions: PropTypes.object.isRequired,
   homeState: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     // homeState: state.homeState,
     homeState: state.get('homeState'),
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     homeActions: bindActionCreators(homeActions, dispatch)
   };
-}
+};
 
 export default connect(
   mapStateToProps,
