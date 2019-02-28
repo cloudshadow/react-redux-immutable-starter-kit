@@ -5,7 +5,7 @@ export default class urlHelper {
 			|| window.location.href.indexOf('//192') > -1
 			|| window.location.href.indexOf('//172') > -1
 			|| window.location.href.indexOf('//10') > -1
-			|| window.location.href.indexOf('cloudshadow.me') > -1
+			|| window.location.href.indexOf('//0') > -1
 		);
 		const remoteServer = '';
 		const apiPath = 'CloudShadow/Api/';
