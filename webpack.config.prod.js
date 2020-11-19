@@ -1,20 +1,21 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
+const HappyPack = require('happypack');
 const folderName = new Date().getTime();
 
 module.exports = {
   mode: 'production',
   entry: [
     // must be first entry to properly set public path
-    path.resolve(__dirname, 'src/index.js') // Defining path seems necessary for this to work consistently on Windows machines.
+    path.resolve(__dirname, 'src/index.js'), // Defining path seems necessary for this to work consistently on Windows machines.
   ],
   output: {
     path: path.resolve(__dirname, 'dist/' + folderName + '/'),
     publicPath: 'http://127.0.0.1/' + folderName + '/',
-    filename: '[name].[contenthash].js'
+    filename: '[name].[contenthash].js',
   },
   plugins: [
     // Hash the files using MD5 so that their names change when the content changes.
@@ -24,11 +25,14 @@ module.exports = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: "[name].[contenthash].css",
+      filename: '[name].[contenthash].css',
       // chunkFilename: "[id].css"
     }),
-
-    new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
+    new HappyPack({
+      loaders: ['babel-loader'],
+    }),
+    new HtmlWebpackPlugin({
+      // Create HTML file that includes references to bundled CSS and JS.
       filename: '../index.html',
       template: 'src/index.ejs',
       minify: {
@@ -41,9 +45,9 @@ module.exports = {
         keepClosingSlash: true,
         minifyJS: true,
         minifyCSS: true,
-        minifyURLs: true
+        minifyURLs: true,
       },
-      inject: true
+      inject: true,
     }),
 
     new webpack.LoaderOptionsPlugin({
@@ -52,72 +56,74 @@ module.exports = {
       noInfo: true, // set to false to see a list of every file being bundled.
       options: {
         sassLoader: {
-          includePaths: [path.resolve(__dirname, 'src', 'scss')]
+          includePaths: [path.resolve(__dirname, 'src', 'scss')],
         },
-        context: '/'
-      }
-    })
+        context: '/',
+      },
+    }),
   ],
   optimization: {
-    minimizer: [
-      // we specify a custom UglifyJsPlugin here to get source maps in production
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        uglifyOptions: {
-          compress: false,
-          ecma: 6,
-          mangle: true
+    splitChunks: {
+      chunks: 'all',
+      minSize: 30000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
         },
-        sourceMap: true
-      })
-    ]
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ['babel-loader', 'happypack/loader'],
       },
       {
         test: /\.eot(\?v=\d+.\d+.\d+)?$/,
-        //type: 'javascript/auto',
-        loader: 'file-loader'
+        use: ['file-loader'],
       },
       {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        //type: 'javascript/auto',
-        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        use: ['url-loader?limit=10000&mimetype=application/font-woff'],
       },
       {
         test: /\.[ot]tf(\?v=\d+.\d+.\d+)?$/,
-        //type: 'javascript/auto',
-        loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+        use: ['url-loader?limit=10000&mimetype=application/octet-stream'],
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        //type: 'javascript/auto',
-        loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
+        use: ['url-loader?limit=10000&mimetype=image/svg+xml'],
       },
       {
         test: /\.(jpe?g|png|gif)$/i,
-        //type: 'javascript/auto',
-        loader: 'file-loader?name=[name].[ext]'
+        use: ['file-loader?name=[name].[ext]'],
       },
       {
         test: /\.ico$/,
-        //type: 'javascript/auto',
-        loader: 'file-loader?name=[name].[ext]'
+        use: ['file-loader?name=[name].[ext]'],
       },
       {
         test: /(\.css|\.scss|\.sass)$/,
-        //type: 'javascript/auto',
-        loaders: [MiniCssExtractPlugin.loader, 'css-loader?sourceMap', 'sass-loader?sourceMap']
-      }
-    ]
+        use: ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap'],
+      },
+    ],
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
-  }
+    extensions: ['*', '.js', '.jsx'],
+  },
 };

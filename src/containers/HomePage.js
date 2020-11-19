@@ -6,12 +6,7 @@ import * as homeActions from '../actions/homeActions';
 import HomeComponent from '../components/Home/HomeComponent';
 
 const HomePage = (props) => {
-  return (
-    <HomeComponent
-      getTitle={props.homeActions.getTitle}
-      homeState={props.homeState}
-    />
-  );
+  return <HomeComponent getTitle={props.homeActions.getTitle} homeState={props.homeState} />;
 };
 
 HomePage.propTypes = {
@@ -21,18 +16,14 @@ HomePage.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    // homeState: state.homeState,
-    homeState: state.get('homeState'),
+    homeState: state.homeState,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    homeActions: bindActionCreators(homeActions, dispatch)
+    homeActions: bindActionCreators(homeActions, dispatch),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

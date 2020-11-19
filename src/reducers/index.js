@@ -1,10 +1,11 @@
-import { combineReducers } from 'redux-immutable';
+import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 import homeState from './homeReducer';
-import { routerReducer } from './routerReducer';
 
-const rootReducer = combineReducers({
-  homeState,
-  router: routerReducer
-});
+const createRootReducer = (history) =>
+  combineReducers({
+    homeState,
+    router: connectRouter(history),
+  });
 
-export default rootReducer;
+export default createRootReducer;

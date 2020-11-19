@@ -6,23 +6,18 @@ import './home.scss';
 const HomeComponent = React.memo((props) => {
   useEffect(() => {
     props.getTitle();
-  },[]);
+  }, []);
 
-  if(props.homeState.get('title')){
+  if (props.homeState.title) {
     return (
       <div className="container-fluid">
         <div className="row">
-          <div className="col-sm-12">
-            {props.homeState.get('title')}
-          </div>
+          <div className="col-sm-12">{props.homeState.title}</div>
         </div>
       </div>
     );
   }
-  return (
-    <div>Loading...</div>
-  );
-  
+  return <div>Loading...</div>;
 });
 
 HomeComponent.propTypes = {

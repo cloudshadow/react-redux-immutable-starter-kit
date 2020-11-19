@@ -1,14 +1,17 @@
-import Immutable from 'immutable';
-import {
-  GET_HOME_TITLE
-} from '../actions/homeActions';
+import produce from 'immer';
+import { GET_HOME_TITLE } from '../actions/homeActions';
 
-const initialState = Immutable.Map();
-
+const initialState = {
+  title: null,
+  error: null,
+  token: null,
+};
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_HOME_TITLE:
-      return state.set('title', action.title);
+      return produce(state, (draftState) => {
+        draftState.title = action.title;
+      });
     default:
       return state;
   }
